@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const app = express()
+const passport = require('passport')
 
 // DB config
 const db = require('./config/key').mongoURI
@@ -11,6 +12,13 @@ const users = require('./router/api/users')
 // 使用 body-parser
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(bodyParser.json())
+
+// 初始化 passport
+app.use(passport.initialize())
+
+// 配置 把passport 传递到 passport.js文件中
+require('./config/passport')(passport)
+
 // connect to db
 mongoose.connect(db, {
     useNewUrlParser: true
