@@ -8,6 +8,7 @@ const passport = require('passport')
 const db = require('./config/key').mongoURI
 // 加载 router
 const users = require('./router/api/users')
+const profiles = require('./router/api/profiles')
 
 // 使用 body-parser
 app.use(bodyParser.urlencoded({extended:false}))
@@ -37,6 +38,8 @@ app.get('/', (req, res) => {
 
 // 使用 router
 app.use('/api/users', users)
+app.use('/api/profiles', profiles)
+
 const port = process.env.PORT || '5000'
 
 app.listen(port, () => {

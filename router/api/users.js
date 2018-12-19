@@ -107,7 +107,7 @@ router.post('/login', (req, res) => {
 // @desc 返回的请求的json数据 current user
 // @access Private 需要token
 // router.get('/current','验证token',(req,res) => { res.json({"msg":""})})
-router.get('/current', passport.authenticate("jwt",{session:false}), (req, res) => {
+router.get('/current', passport.authenticate("jwt", {session:false}), (req, res) => {
   // res.json(req.user)
   res.json({
     id:req.user.id,
