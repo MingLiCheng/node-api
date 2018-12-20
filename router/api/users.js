@@ -63,6 +63,8 @@ router.post('/register', (req, res) => {
 router.post('/login', (req, res) => {
   const email = req.body.email
   const password = req.body.password
+  console.log('email:' + email + '--' + 'password:' + password)
+
 
   User.findOne({
       email
@@ -107,13 +109,38 @@ router.post('/login', (req, res) => {
 // @desc 返回的请求的json数据 current user
 // @access Private 需要token
 // router.get('/current','验证token',(req,res) => { res.json({"msg":""})})
-router.get('/current', passport.authenticate("jwt", {session:false}), (req, res) => {
+router.get('/current', passport.authenticate("jwt", {
+  session: false
+}), (req, res) => {
   // res.json(req.user)
   res.json({
-    id:req.user.id,
-    name:req.user.name,
-    email:req.user.email
+    id: req.user.id,
+    name: req.user.name,
+    email: req.user.email
   })
 })
+
+
+// $route GET api/users/:email
+// @desc 返回的请求的json数据 判断邮箱是否存在
+// @access public 需要token
+router.get('/:email', (req, res) => {
+  User.findOne({
+    email: req.params.email
+  }).then(result => {
+    if (result) {
+      // console.log(1);
+      res.json({
+        msg: 1
+      })
+    } else {
+      res.json({
+        msg: 0
+      })
+
+    }
+  })
+})
+
 
 module.exports = router
