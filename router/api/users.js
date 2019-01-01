@@ -21,7 +21,7 @@ router.get('/test', (req, res) => {
 // @desc 返回的请求的json数据
 // @access public
 router.post('/register', (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
   // 首先查询数据库中是否有这个邮箱
   User.findOne({
       email: req.body.email
@@ -57,6 +57,24 @@ router.post('/register', (req, res) => {
 
 })
 
+// $route GET api/users/
+// @desc 返回所有数据
+// @access private
+router.get('/', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
+  User.find().then(result => {
+    if (!result) {
+      res.status(404).json('没有内容')
+    } else {
+      res.json({
+        "code": 0,
+        result
+      })
+    }
+  })
+})
+
 // $route POST api/users/login
 // @desc 返回的请求的json数据 token jwt(json web token) passport
 // @access public
@@ -64,7 +82,6 @@ router.post('/login', (req, res) => {
   const email = req.body.email
   const password = req.body.password
   console.log('email:' + email + '--' + 'password:' + password)
-
 
   User.findOne({
       email
@@ -120,6 +137,21 @@ router.get('/current', passport.authenticate("jwt", {
   })
 })
 
+// @route  Delete api/users/delete/:id
+// @desc   删除信息接口
+// @access Private
+router.delete('/delete/:id', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
+  console.log('删除用户-->' + req.params.id);
+  User.findOneAndDelete({
+      _id: req.params.id
+    })
+    .then(user => {
+      user.save().then(user => res.json(user));
+    })
+    .catch(err => res.status(404).json('删除失败!'));
+})
 
 // $route GET api/users/:email
 // @desc 返回的请求的json数据 判断邮箱是否存在
@@ -141,6 +173,27 @@ router.get('/:email', (req, res) => {
     }
   })
 })
+
+
+// @route  POST api/users/edit
+// @desc   更新信息接口
+// @access Private
+router.post('/edit/:id', passport.authenticate('jwt', {
+  session: false
+}), (req, res) => {
+  const userFields = {};
+
+  if (req.body.name) userFields.name = req.body.name;
+  if (req.body.password) userFields.password = req.body.password;
+
+  User.findOneAndUpdate({
+    _id: req.params.id
+  }, {
+    $set: userFields
+  }, {
+    new: true
+  }).then(user => res.json(user))
+});
 
 
 module.exports = router

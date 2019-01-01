@@ -101,6 +101,7 @@ router.post('/edit/:id', passport.authenticate('jwt', {
 router.delete('/delete/:id', passport.authenticate('jwt', {
   session: false
 }), (req, res) => {
+  console.log('删除资金记录-->'+ req.params.id);
   Profile.findOneAndDelete({
       _id: req.params.id
     })
