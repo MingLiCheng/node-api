@@ -101,7 +101,8 @@ router.post('/login', (req, res) => {
               const rule = {
                 id: user.id,
                 name: user.name,
-                identity: user.identity
+                identity: user.identity,
+                avatar: user.avatar
               }
               jwt.sign(rule, keys.secretOrKey, {
                 expiresIn: 3600

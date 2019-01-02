@@ -43,7 +43,7 @@ router.post('/upload', upload.single('file'), function (req, res, next) {
   console.log('文件保存路径：%s', file.path);
 
   res.send({
-    ret_code: '0',
+    ret_code: '200',
     img_path: `${file.path}`
   });
 });
