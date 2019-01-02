@@ -11,6 +11,7 @@ const db = require('./config/key').mongoURI
 const users = require('./router/api/users')
 const profiles = require('./router/api/profiles')
 const foods = require('./router/api/foods')
+const upload = require('./router/api/upload')
 
 app.use('/public', express.static(path.join(__dirname, './public')))
 app.use('/upload', express.static(path.join(__dirname, './upload')))
@@ -34,6 +35,16 @@ mongoose.connect(db, {
     console.log(err);
   })
 
+app.all('*', function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With');
+  res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+  if (req.method == 'OPTIONS') {
+    res.send(200);
+  } else {
+    next();
+  }
+});
 
 
 app.get('/', (req, res) => {
@@ -44,8 +55,10 @@ app.get('/', (req, res) => {
 app.use('/api/users', users)
 app.use('/api/profiles', profiles)
 app.use('/api/foods', foods)
+app.use('/api', upload)
 
 const port = process.env.PORT || '5000'
+
 
 app.listen(port, () => {
   console.log(`the server is running on ${port}`)

@@ -100,7 +100,8 @@ router.post('/login', (req, res) => {
               // jwt.sign("规则","加密的名字","过期时间","回掉")
               const rule = {
                 id: user.id,
-                name: user.name
+                name: user.name,
+                identity: user.identity
               }
               jwt.sign(rule, keys.secretOrKey, {
                 expiresIn: 3600
@@ -157,6 +158,7 @@ router.delete('/delete/:id', passport.authenticate('jwt', {
 // @desc 返回的请求的json数据 判断邮箱是否存在
 // @access public 需要token
 router.get('/:email', (req, res) => {
+  console.log('用户名验证')
   User.findOne({
     email: req.params.email
   }).then(result => {

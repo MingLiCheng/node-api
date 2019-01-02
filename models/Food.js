@@ -4,7 +4,8 @@ const Schema = mongoose.Schema
 // Create Schema
 const FoodSchema = new Schema({
   type: {
-    type: String
+    type: String,
+    default: "001"
   },
   name: {
     type: String,
